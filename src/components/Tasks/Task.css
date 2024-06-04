@@ -1,0 +1,35 @@
+.task-container{
+    height: 50px;
+    width: 80%;
+    border: 1px solid #333;
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-left: 15px;
+    
+}
+.text{
+    
+}
+.btns{
+    display: flex;
+    height: 100%;
+    width: auto;
+    gap: 1px    ;
+}
+.edit,.delete{
+   
+    height: 100%;
+    width: 50px;
+    background-color: #333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 0
+}
+
+.edit:hover,.delete:hover{
+    background-color: #444;
+    border: black;
+}
