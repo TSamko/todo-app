@@ -1,6 +1,6 @@
 .container{
     min-height: 600px !important; 
-    width: 500px !important; 
+    min-width: 500px !important; 
     border: 1px solid white !important; 
     border-radius: 5px;
     display: flex !important; 
@@ -9,5 +9,6 @@
     padding-bottom: 25px;
     margin-bottom: 25px;
     margin-top: 25px;
+    
     gap: 25px   ;
 }

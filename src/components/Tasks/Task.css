@@ -1,5 +1,5 @@
 .task-container{
-    height: 50px;
+    min-height: 50px;
     width: 80%;
     border: 1px solid #333;
     border-radius: 5px;
@@ -7,20 +7,23 @@
     justify-content: space-between;
     align-items: center;
     padding-left: 15px;
+    gap: 10px   ;
     
 }
 .text{
-    
+    max-width: 40%;
 }
 .btns{
     display: flex;
     height: 100%;
     width: auto;
     gap: 1px    ;
+    border-radius: 5px;
+   
 }
 .edit,.delete{
-   
-    height: 100%;
+    margin-right: 10px;
+    min-height: 100%;
     width: 50px;
     background-color: #333;
     display: flex;
@@ -32,4 +35,15 @@
 .edit:hover,.delete:hover{
     background-color: #444;
     border: black;
+}
+
+.due-date{
+    width: auto;
+    display: flex;
+    
+}
+
+.save{
+    border-radius: 0;
+    margin-right: 10px;
 }
