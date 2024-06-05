@@ -1,1 +1,20 @@
-[]
+[
+  {
+    "id": "617a4237-832e-4518-ae6f-b3d91e1b33e1",
+    "task": "fsfwasf",
+    "dueDate": "2024-06-14T20:25:00.000Z",
+    "author": ""
+  },
+  {
+    "id": "0068087c-71c4-4dab-94d1-a1a07b34604e",
+    "task": "fwasfwasfasf",
+    "dueDate": "2024-06-21T21:26:00.000Z",
+    "author": ""
+  },
+  {
+    "id": "4f2517c7-8e2c-454d-bc6b-c39403458b06",
+    "task": "nevim chci umít nádobí ",
+    "dueDate": "2024-06-06T08:50:00.000Z",
+    "author": ""
+  }
+]

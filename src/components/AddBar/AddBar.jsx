@@ -9,7 +9,7 @@ function AddBar({ onAddTask }) {
   const handleSubmit = (event) => {
     event.preventDefault();
     if (newTask.trim() !== '' && dueDate !== '') {
-      onAddTask({ task: newTask, dueDate });
+      onAddTask({ task: newTask, dueDate: new Date(dueDate).toISOString() });
       setNewTask('');
       setDueDate('');
     }

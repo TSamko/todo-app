@@ -22,10 +22,14 @@ function Task() {
   useEffect(() => {
     fetch('http://localhost:5000/tasks')
       .then(response => response.json())
-      .then(data => setTasks(data.map(task => ({
-        ...task,
-        dueDate: task.dueDate // Store the due date as ISO string
-      }))));
+      .then(data => {
+        console.log('Fetched tasks:', data); // Debug log
+        setTasks(data.map(task => ({
+          ...task,
+          dueDate: task.dueDate // Store the due date as ISO string
+        })));
+      })
+      .catch(error => console.error('Error fetching tasks:', error));
   }, []);
 
   const handleEdit = (task) => {
@@ -49,7 +53,8 @@ function Task() {
         setTasks(tasks.map(t => (t.id === task.id ? updatedTask : t)));
         setEditingTask(null);
         setIsEditing(false);
-      });
+      })
+      .catch(error => console.error('Error updating task:', error));
   };
 
   const handleRemove = (task) => {
@@ -57,7 +62,7 @@ function Task() {
       method: 'DELETE'
     }).then(() => {
       setTasks(tasks.filter(t => t.id !== task.id));
-    });
+    }).catch(error => console.error('Error deleting task:', error));
   };
 
   const handleEditInputChange = (e) => {
@@ -78,49 +83,54 @@ function Task() {
       .then(response => response.json())
       .then(newTask => {
         setTasks([...tasks, newTask]);
-      });
+      })
+      .catch(error => console.error('Error adding task:', error));
   };
 
   return (
     <>
       <AddBar onAddTask={(newTask) => handleAddTask(newTask)} />
-      {tasks.map((task, index) => (
-        <div key={index} className="task-container">
-          {isEditing && editingTask === task ? (
-            <>
-              <input
-                type="text"
-                value={currentTask.task}
-                onChange={handleEditInputChange}
-              />
-              <input
-                type="datetime-local"
-                value={currentDueDate}
-                onChange={handleDueDateInputChange}
-              />
-            </>
-          ) : (
-            <>
-              <div className="text">{task.task}</div>
-              <div className="due-date">{formatDueDate(task.dueDate)}</div>
-            </>
-          )}
-          <div className="btns">
+      {tasks.length > 0 ? (
+        tasks.map((task, index) => (
+          <div key={index} className="task-container">
             {isEditing && editingTask === task ? (
-              <button className="save" onClick={() => handleSave(task)}>
-                Save
-              </button>
+              <>
+                <input
+                  type="text"
+                  value={currentTask.task}
+                  onChange={handleEditInputChange}
+                />
+                <input
+                  type="datetime-local"
+                  value={currentDueDate}
+                  onChange={handleDueDateInputChange}
+                />
+              </>
             ) : (
-              <button className="edit" onClick={() => handleEdit(task)}>
-                Edit
-              </button>
+              <>
+                <div className="text">{task.task}</div>
+                <div className="due-date">{formatDueDate(task.dueDate)}</div>
+              </>
             )}
-            <button className="delete" onClick={() => handleRemove(task)}>
-              -
-            </button>
+            <div className="btns">
+              {isEditing && editingTask === task ? (
+                <button className="save" onClick={() => handleSave(task)}>
+                  Save
+                </button>
+              ) : (
+                <button className="edit" onClick={() => handleEdit(task)}>
+                  Edit
+                </button>
+              )}
+              <button className="delete" onClick={() => handleRemove(task)}>
+                -
+              </button>
+            </div>
           </div>
-        </div>
-      ))}
+        ))
+      ) : (
+        <p>No tasks available</p>
+      )}
     </>
   );
 }
