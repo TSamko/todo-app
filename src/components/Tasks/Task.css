@@ -1,6 +1,6 @@
 .task-container{
     min-height: 50px;
-    width: 80%;
+    min-width: 90%; 
     border: 1px solid #333;
     border-radius: 5px;
     display: flex;
@@ -8,6 +8,7 @@
     align-items: center;
     padding-left: 15px;
     gap: 10px   ;
+    margin: 0 auto; /* Center the task container */
     
 }
 .text{

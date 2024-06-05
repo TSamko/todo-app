@@ -24,7 +24,7 @@ function Task() {
       .then(response => response.json())
       .then(data => setTasks(data.map(task => ({
         ...task,
-        dueDate: formatDueDate(task.dueDate)
+        dueDate: task.dueDate // Store the due date as ISO string
       }))));
   }, []);
 
@@ -38,7 +38,7 @@ function Task() {
   };
 
   const handleSave = (task) => {
-    const updatedTask = { ...task, task: currentTask.task, dueDate: currentDueDate };
+    const updatedTask = { ...task, task: currentTask.task, dueDate: new Date(currentDueDate).toISOString() };
     fetch(`http://localhost:5000/tasks/${task.id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
@@ -69,10 +69,11 @@ function Task() {
   };
 
   const handleAddTask = (newTask) => {
+    const taskWithIsoDate = { ...newTask, dueDate: new Date(newTask.dueDate).toISOString() };
     fetch('http://localhost:5000/tasks', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(newTask)
+      body: JSON.stringify(taskWithIsoDate)
     })
       .then(response => response.json())
       .then(newTask => {
@@ -93,7 +94,7 @@ function Task() {
                 onChange={handleEditInputChange}
               />
               <input
-                type="text"
+                type="datetime-local"
                 value={currentDueDate}
                 onChange={handleDueDateInputChange}
               />
@@ -101,7 +102,7 @@ function Task() {
           ) : (
             <>
               <div className="text">{task.task}</div>
-              <div className="due-date">{task.dueDate}</div>
+              <div className="due-date">{formatDueDate(task.dueDate)}</div>
             </>
           )}
           <div className="btns">

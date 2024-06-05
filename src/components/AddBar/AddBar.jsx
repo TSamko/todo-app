@@ -6,20 +6,10 @@ function AddBar({ onAddTask }) {
   const [newTask, setNewTask] = useState('');
   const [dueDate, setDueDate] = useState('');
 
-  const formatDueDate = (date) => {
-    const dueDateObj = new Date(date);
-    const month = dueDateObj.getMonth() + 1;
-    const day = dueDateObj.getDate();
-    const hours = dueDateObj.getHours();
-    const minutes = String(dueDateObj.getMinutes()).padStart(2, '0');
-    return `${month}.${day} - ${hours}:${minutes}`;
-  };
-
   const handleSubmit = (event) => {
     event.preventDefault();
     if (newTask.trim() !== '' && dueDate !== '') {
-      const formattedDueDate = formatDueDate(dueDate);
-      onAddTask({ task: newTask, dueDate: formattedDueDate });
+      onAddTask({ task: newTask, dueDate });
       setNewTask('');
       setDueDate('');
     }
