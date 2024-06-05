@@ -1,7 +1,6 @@
 /* eslint-disable */
 import React, { useState, useEffect } from 'react';
 import './Task.css';
-import Cookies from 'js-cookie';
 import AddBar from '../AddBar/AddBar.jsx';
 
 const formatDueDate = (date) => {
@@ -13,44 +12,21 @@ const formatDueDate = (date) => {
   return `${month}.${day} - ${hours}:${minutes}`;
 };
 
-const tasksJson = [
-  {
-    id: 1,
-    task: "Learn about JSON",
-    dueDate: new Date().toISOString(),
-    author: "AqilCont"
-  },
-  {
-    id: 2,
-    task: "Create a quote machine",
-    dueDate: new Date().toISOString(),
-    author: "alta9"
-  },
-  {
-    id: 3,
-    task: "Understand the difference between JSON and XML",
-    dueDate: new Date().toISOString(),
-    author: "hejmaria"
-  }
-];
-
 function Task() {
-  const [tasks, setTasks] = useState(() => {
-    const storedTasks = Cookies.get('tasks') ? JSON.parse(Cookies.get('tasks')) : tasksJson;
-    return storedTasks.map(task => ({
-      ...task,
-      dueDate: formatDueDate(task.dueDate)
-    }));
-  });
-
+  const [tasks, setTasks] = useState([]);
   const [editingTask, setEditingTask] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [currentTask, setCurrentTask] = useState({});
   const [currentDueDate, setCurrentDueDate] = useState('');
 
   useEffect(() => {
-    Cookies.set('tasks', JSON.stringify(tasks));
-  }, [tasks]);
+    fetch('http://localhost:5000/tasks')
+      .then(response => response.json())
+      .then(data => setTasks(data.map(task => ({
+        ...task,
+        dueDate: formatDueDate(task.dueDate)
+      }))));
+  }, []);
 
   const handleEdit = (task) => {
     if (editingTask !== task) {
@@ -62,15 +38,26 @@ function Task() {
   };
 
   const handleSave = (task) => {
-    const updatedTasks = tasks.map((t) => (t.id === task.id ? { ...t, task: currentTask.task, dueDate: currentDueDate } : t));
-    setTasks(updatedTasks);
-    setEditingTask(null);
-    setIsEditing(false);
+    const updatedTask = { ...task, task: currentTask.task, dueDate: currentDueDate };
+    fetch(`http://localhost:5000/tasks/${task.id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(updatedTask)
+    })
+      .then(response => response.json())
+      .then(() => {
+        setTasks(tasks.map(t => (t.id === task.id ? updatedTask : t)));
+        setEditingTask(null);
+        setIsEditing(false);
+      });
   };
 
   const handleRemove = (task) => {
-    const updatedTasks = tasks.filter((t) => t.id !== task.id);
-    setTasks(updatedTasks);
+    fetch(`http://localhost:5000/tasks/${task.id}`, {
+      method: 'DELETE'
+    }).then(() => {
+      setTasks(tasks.filter(t => t.id !== task.id));
+    });
   };
 
   const handleEditInputChange = (e) => {
@@ -82,8 +69,15 @@ function Task() {
   };
 
   const handleAddTask = (newTask) => {
-    const newTaskObj = { id: tasks.length + 1, ...newTask, author: "" };
-    setTasks([...tasks, newTaskObj]);
+    fetch('http://localhost:5000/tasks', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(newTask)
+    })
+      .then(response => response.json())
+      .then(newTask => {
+        setTasks([...tasks, newTask]);
+      });
   };
 
   return (
